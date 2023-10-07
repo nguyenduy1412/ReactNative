@@ -34,7 +34,7 @@ function BookList() {
   useEffect(() => {
     // Gọi API và cập nhật danh sách sinh viên
     axios
-      .get("http://192.168.4.95:8080/api/book")
+      .get("http://10.0.60.165:8080/api/book")
       .then((response) => {
         setBookList(response.data);
       })

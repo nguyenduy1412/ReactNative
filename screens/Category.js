@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, Button,StyleSheet } from "react-native";
 import axios from "axios";
-
+const ip='192.168.136.95';
 function CategoryList() {
   const [categoryList, setCategoryList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -34,7 +34,7 @@ function CategoryList() {
   useEffect(() => {
     // Gọi API và cập nhật danh sách sinh viên
     axios
-      .get("http://192.168.4.95:8080/api/category/")
+      .get(`http://${ip}:8080/api/category/`)
       .then((response) => {
         setCategoryList(response.data);
       })

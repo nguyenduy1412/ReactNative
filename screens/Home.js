@@ -9,11 +9,11 @@ function Home({ navigation }) {
       <Text>Màn hình trang chủ</Text>
       <Button
         title="Go to classes..."
-        onPress={() => navigation.navigate('Classes')}
+        onPress={() => navigation.navigate('BookDetail')}
       /> 
       <Button
-        title="Go to studnets..."
-        onPress={() => navigation.navigate('Student')}
+        title="Go to detail.."
+        onPress={() => navigation.navigate('BookDetail')}
       />
        <Button
         title="Go to category..."

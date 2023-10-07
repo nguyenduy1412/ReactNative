@@ -15,7 +15,7 @@ import Checkbox from "expo-checkbox";
 import Icon from "react-native-vector-icons/Fontisto";
 import { StatusBar } from "expo-status-bar";
 import { Button } from 'react-native-paper'
-
+const ip='192.168.0.101';
 const LoginScreen = ({ navigation }) => {
   const [isCheck, setIsCheck] = useState(false);
   const [username, setUsername] = useState("");
@@ -23,16 +23,8 @@ const LoginScreen = ({ navigation }) => {
   //const navigation = useNavigation();
   const handleLogin = async () => {
     try {
-      // const response = await axios.post(
-      //   `https://api2.epu.edu.vn/ams/auth/login/`,
-      //   {
-      //     'username': username,
-      //     'password': password
-      //   }
-      // );
-
       const response = await axios.get(
-        `http://192.168.4.95:8080/api/user?username=${username}&&password=${password}`
+        `http://${ip}:8080/api/user?username=${username}&&password=${password}`
       );
       console.log('Alo',response.data);
       if (response.data) {
@@ -47,25 +39,7 @@ const LoginScreen = ({ navigation }) => {
       console.error("Error logging in:", error);
     }
   };
-
   return (
-    // <View style={styles.container}>
-    //   <Text style={styles.heading}>Login</Text>
-    //   <TextInput
-    //     placeholder="Username"
-    //     value={username}
-    //     onChangeText={setUsername}
-    //     style={styles.input}
-    //   />
-    //   <TextInput
-    //     placeholder="Password"
-    //     secureTextEntry
-    //     value={password}
-    //     onChangeText={setPassword}
-    //     style={styles.input}
-    //   />
-    //   <Button title="Login" onPress={handleLogin} />
-    // </View>
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={"#fff"} barStyle={"dark-content"}></StatusBar>
       <View>
