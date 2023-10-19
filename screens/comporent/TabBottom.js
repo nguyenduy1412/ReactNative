@@ -4,29 +4,26 @@ import { ScrollView } from 'react-native';
 import { View, Image, StyleSheet, Dimensions } from 'react-native';
 
 import SwiperFlatList from 'react-native-swiper-flatlist';
-import ListBook from './comporent/ListBook';
-import ListCategory from './comporent/ListCategory';
-import ListBanner from './comporent/ListBanner';
-import Search from './comporent/Search';
-import BookDetail from './comporent/BookDetail';
-import { Button } from 'react-native-paper';
 
+
+import { Button } from 'react-native-paper';
+import Search from './Search';
+import ListBanner from './ListBanner';
+import ListCategory from './ListCategory';
+import ListBook from './ListBook';
+import HomeScreen from '../HomeScreen';
 
 // import Swiper from 'react-native-swiper';
 
-const HomeScreen = ({setSelectedTab}) => {
+const TabBottom = ({navigation}) => {
    
-    const ip="10.0.61.143";
+    const ip="192.168.0.103";
     const [searchQuery, setSearchQuery] = React.useState('');
     const onChangeSearch = query => setSearchQuery(query);
     return (
-        <View style={styles.container}>
-            
-            <Search ></Search>
+        <View style={styles.container}>  
             <ScrollView>
-                <ListBanner ip={ip}></ListBanner>
-                <ListCategory ip={ip} ></ListCategory>
-                <ListBook  ip={ip} ></ListBook>
+                <HomeScreen></HomeScreen>
             </ScrollView>
       </View>
         
@@ -41,4 +38,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default HomeScreen;
+export default TabBottom;

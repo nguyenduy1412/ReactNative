@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const Order = () => {
+const ListOrder = () => {
   return (
     <View>
-      <Text>Order</Text>
+      <Text>ListOrder</Text>
     </View>
   )
 }
 
-export default Order
+export default ListOrder
 
 const styles = StyleSheet.create({})

@@ -5,37 +5,53 @@ import { Dimensions } from 'react-native'
 import { Image } from 'react-native'
 import { ScrollView } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { Button, IconButton, MD3Colors } from 'react-native-paper'
+import { useState } from 'react'
 
 const { width, height } = Dimensions.get('screen')
-const BookDetail = ({navigation}) => {
+const BookDetail = ({route,navigation}) => {
+    const { bookItem,ip } = route.params;
+    console.log(bookItem)
+    console.log(ip)
+    const [count,setCount]=useState(0)
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <IconButton
-                    style={{marginTop:45}}
+                    
                     icon="arrow-left"
                     mode="contained"
                     color="#00ABE0"
                     size={20}
                     onPress={() => navigation.navigate('Home')}
                 />
-                <Search></Search>
+                <Search  ></Search>
             </View>
             
             <ScrollView>
                 <View>
                     <View style={styles.anh}>
-                        <Image style={styles.anhbook} source={require('../../assets/conan1.jpg')} resizeMode="contain" />
+                        <Image style={styles.anhbook} source={{uri: 'http://'+ip+':8080/uploads/'+bookItem.image}} resizeMode="contain" />
+                        <View style={styles.bag}>
+                            <SimpleLineIcons name="handbag" style={styles.iconbag}></SimpleLineIcons>
+                        </View>
+                        <View style={styles.quantity}>
+                            <Text style={{ color:'white',fontWeight:'bold'}}>{count}</Text>
+                        </View>
                     </View>
                     <View style={styles.noidung}>
                         <View style={styles.pricebook}>
-                            <Text style={styles.priceSale}>57.000 đ</Text>
-                            <Text style={styles.price}>57.000 đ</Text>
-                            <Text style={styles.sale}>-5%</Text>
+                            <Text style={styles.priceSale}>{bookItem.priceSale.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</Text>
+                            {bookItem.sale === 0 ? null : (
+                            <View style={{flexDirection:'row'}}>
+                               <Text style={styles.price}>{bookItem.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</Text>
+                                <Text style={styles.sale}>-{bookItem.sale}%</Text>
+                            </View>
+                            )}
                         </View>
-                        <Text style={styles.bookName}>Thám tử lừng danh Conan</Text>
-                        <Text style={styles.author}>Aysoga</Text>
+                        <Text style={styles.bookName}>{bookItem.image}</Text>
+                        <Text style={styles.author}>{bookItem.author}</Text>
                         <View style={styles.start}>
                             <Text> <Icon name="star" size={15} color="#FFCE3D" /></Text>
                             <Text> <Icon name="star" size={15} color="#FFCE3D" /></Text>
@@ -46,23 +62,28 @@ const BookDetail = ({navigation}) => {
                         </View>
                         <View>
                             <Text style={styles.detail}>Chi tiết</Text>
-                            <Text>Nhà xuất bản: NXB Kim Đồng</Text>
-                            <Text>Năm xuất bản: 2023</Text>
-                            <Text>Thể loại: Truyện tranh</Text>
-                            <Text style={styles.detail} >Mô tả  </Text>
-                            <Text>Doraemon đã dùng bảo bối "máy bơm nước giả tưởng" để biến cả thành phố nơi Nobita đang ở chìm xuống đáy biển. Sau khi phải rời khỏi hành tinh Aqua, cư dân tộc người cá đã đáp xuống Trái đất và âm thầm sống dưới đáy biển. Một ngày, công chúa Sophia đã vô tình bơi lạc vào vùng biển giả tưởng của N Phát hiện ra nơi ẩn náu của tộc người cá, Buikin và bè lũ quái vật người cá xuất hiện tấn công họ. Và cuộc đại thủy chiến liên quan đến thanh gươm truyền thuyết của tộc người cá bùng nổ!!!</Text>
+                            <Text>Nhà xuất bản: {bookItem.publicsher}</Text>
+                            <Text>Năm xuất bản: {bookItem.publicationYear}</Text>
+                            <Text>Thể loại: {bookItem.category.categoryName}</Text>
+                            <Text style={styles.detail} >Mô tả</Text>
+                            <Text>{bookItem.description}</Text>
+                        </View>
+                        <View style={styles.divanh}>
+                            <Image style={styles.imgBook} source={{uri: 'http://192.168.0.103:8080/uploads/'+bookItem.image}}/>
                         </View>
                     </View>
                 </View>
             </ScrollView>
+            
             <View style={styles.shopping}>
             <Button style={styles.btn} icon="cart-outline" mode="contained" buttonColor="#00ABE0" onPress={() => navigation.navigate('Order')}>
                 Thêm vào giỏ hàng
             </Button>
-            <Button style={styles.btn} icon="shopping" mode="contained" buttonColor="#00ABE0" onPress={() => navigation.navigate('Order')}>
+            <Button style={styles.btn} icon="shopping" mode="contained" buttonColor="#00ABE0" onPress={() => navigation.navigate('Home')}>
                 Mua ngay
             </Button>
             </View>
+            
         </View>
     )
 }
@@ -88,7 +109,8 @@ const styles = StyleSheet.create({
     },
 
     anhbook: {
-        height:350
+        height:350,
+        width:'80%'
     },
     noidung:{
         paddingHorizontal:15
@@ -141,5 +163,32 @@ const styles = StyleSheet.create({
         height:50,
         alignItems:'center',
         justifyContent: 'center'
-    }
+    },
+    bag:{
+        height:60,
+        width:60,
+        backgroundColor:'#00ABE0',
+        position:'absolute',
+        top:10,
+        right:10,
+        borderRadius:50,
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    iconbag:{
+        fontSize:30,
+        color:'white'
+    },
+    quantity:{
+        width:30,
+        height:30,
+        backgroundColor:'red',
+        borderRadius:15,
+        position:'absolute',
+        top:10,
+        right:10,
+        justifyContent:'center',
+        alignItems:'center',
+    },
+
 })

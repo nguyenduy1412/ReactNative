@@ -24,13 +24,13 @@ const LoginScreen = ({ navigation }) => {
   const handleLogin = async () => {
     try {
       const response = await axios.get(
-        `http://${ip}:8080/api/user?username=${username}&&password=${password}`
+        `http://192.168.136.95:8080/api/user?username=${username}&&password=${password}`
       );
       console.log('Alo',response.data);
       if (response.data) {
         // Đăng nhập thành công
         Alert.alert("Thông báo", "Đăng nhập thành công!");
-        navigation.navigate("Home");
+        navigation.navigate("BookDetail");
       } else {
         // Đăng nhập thất bại
         Alert.alert("Thông báo", "Đăng nhập thất bại");
@@ -91,9 +91,7 @@ const LoginScreen = ({ navigation }) => {
           {/* <Button title="Login" onPress={handleLogin} style={{fontWeight:'bold',color:'#fff'}} /> */}
           <Text style={{ fontWeight: "bold", color: "#fff" }}>Login</Text>
         </TouchableOpacity>
-        <Button icon="camera" mode="contained" onPress={() => console.log('Pressed')}>
-    Press me
-  </Button>
+        
         {/* <Space wrap>
           <Button color="primary" fill="solid">
             Solid

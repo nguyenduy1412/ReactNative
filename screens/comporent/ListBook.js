@@ -7,10 +7,12 @@ import axios from "axios";
 import Icon from 'react-native-vector-icons/AntDesign';
 import BookDetail from './BookDetail'
 import { Drawer } from 'react-native-paper'
+import { CommonActions } from '@react-navigation/native';
 const { width, height } = Dimensions.get('screen')
-
-const ListBook = ({ip,navigation}) => {
+import { useNavigation } from "@react-navigation/native";
+const ListBook = ({ip}) => {
   //console.log(navigation)
+  const navigation = useNavigation();
     const [bookList, setBookList] = useState([]);
     useEffect(() => {
         // Gọi API và cập nhật danh sách sinh viên
@@ -35,7 +37,7 @@ const ListBook = ({ip,navigation}) => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
         
-            <TouchableOpacity style={styles.item} onPress={() => { navigation.navigate('BookDetail'); }} >
+            <TouchableOpacity style={styles.item} onPress={() => { navigation.navigate('BookDetail',{ bookItem: item,ip:ip}); }} >
               {item.sale === 0 ? null : (
                <View style={styles.sale}>
                    <Text style={{color:'#fff'}}>-{item.sale}%</Text>
@@ -60,13 +62,7 @@ const ListBook = ({ip,navigation}) => {
     </View>
   )
 }
-function Root() {
-  return (
-    <Drawer.Navigator>
-      <Drawer.Screen name="Detail" component={BookDetail} />
-    </Drawer.Navigator>
-  );
-}
+
 export default ListBook
 
 const styles = StyleSheet.create({
@@ -94,10 +90,13 @@ const styles = StyleSheet.create({
     },
     item:{
         width:'47%',
-        marginBottom:15
+        marginBottom:15,
+      
     },
     divanh:{
-      overflow:'hidden'
+      overflow:'hidden',
+      borderWidth: 1,
+      borderRadius:20,
     },
     imgBook:{
       width:'100%',

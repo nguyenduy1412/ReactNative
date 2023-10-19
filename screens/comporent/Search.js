@@ -1,21 +1,31 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { Searchbar } from 'react-native-paper';
 import { Image } from 'react-native';
+import { StatusBar } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
 const Search = () => {
     const [searchQuery, setSearchQuery] = React.useState('');
     const onChangeSearch = query => setSearchQuery(query);
+    const navigation = useNavigation();
+    const handleImagePress = () => {
+        // Đặt selectedTab thành 'Account' khi hình ảnh được nhấn
+        navigation.navigate('Home',{ selected: 'Account'})
+        
+      };
   return (
     <View style={styles.container}>
+        <StatusBar backgroundColor={"#fff"} barStyle={"dark-content"}></StatusBar>
         <Searchbar
             style={styles.search}
             placeholder="Search"
             onChangeText={onChangeSearch}
             value={searchQuery}
         />
-        <View style={styles.imguser}>
-            <Image style={styles.anh} source={require('../../assets/anh.jpg')}></Image>
-        </View>
+        <TouchableOpacity style={styles.imguser} onPress={handleImagePress} > 
+            <Image style={styles.anh} source={require('../../assets/banner1.jpg')}></Image>
+        </TouchableOpacity>
     </View>
   )
 }
@@ -35,9 +45,9 @@ const styles = StyleSheet.create({
     },
     container:{
         backgroundColor:'white',
-        marginTop:25,
-        padding:20,
-        paddingBottom:8,
+       
+        paddingHorizontal:20,
+        paddingVertical:10,
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems:'center',
