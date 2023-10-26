@@ -1,89 +1,79 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import Search from './Search'
-import { Dimensions } from 'react-native'
+import { StatusBar } from 'react-native'
 import { Image } from 'react-native'
-import { ScrollView } from 'react-native'
-import Icon from 'react-native-vector-icons/AntDesign';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { Button, IconButton, MD3Colors } from 'react-native-paper'
-import { useState } from 'react'
+import { SafeAreaView } from 'react-native'
+import { TouchableOpacity } from 'react-native'
+import { AntDesign } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 
-const { width, height } = Dimensions.get('screen')
-const BookDetail = ({route,navigation}) => {
-    const { bookItem,ip } = route.params;
-    console.log(bookItem)
-    console.log(ip)
-    const [count,setCount]=useState(0)
+
+import { Button } from 'react-native-paper'
+const BookDetail = ({ route, navigation }) => {
+    const { bookItem, ip } = route.params;
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <IconButton
-                    
-                    icon="arrow-left"
-                    mode="contained"
-                    color="#00ABE0"
-                    size={20}
-                    onPress={() => navigation.navigate('Home')}
-                />
-                <Search  ></Search>
+        <View style={{ flex: 1, backgroundColor: 'white' }} >
+            <StatusBar translucent={true} backgroundColor={'transparent'}></StatusBar>
+            <Image style={styles.anh} source={{ uri: 'http://' + ip + ':8080/uploads/' + bookItem.image }}></Image>
+            {/* //Button */}
+
+            <TouchableOpacity style={styles.back} onPress={() => { navigation.goBack() }}>
+                
+                <AntDesign name="arrowleft" size={30} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.cart}>
+                <AntDesign name="heart" size={30} color="white" />
+            </TouchableOpacity>
+            <View style={styles.space}>
+
             </View>
-            
-            <ScrollView>
-                <View>
-                    <View style={styles.anh}>
-                        <Image style={styles.anhbook} source={{uri: 'http://'+ip+':8080/uploads/'+bookItem.image}} resizeMode="contain" />
-                        <View style={styles.bag}>
-                            <SimpleLineIcons name="handbag" style={styles.iconbag}></SimpleLineIcons>
-                        </View>
-                        <View style={styles.quantity}>
-                            <Text style={{ color:'white',fontWeight:'bold'}}>{count}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.noidung}>
-                        <View style={styles.pricebook}>
-                            <Text style={styles.priceSale}>{bookItem.priceSale.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</Text>
-                            {bookItem.sale === 0 ? null : (
+            {/* Nội dung */}
+            <ScrollView style={styles.tiltle}>
+                <View style={styles.noidung}>
+                    <View style={styles.pricebook}>
+                        <Text style={styles.priceSale}>{bookItem.priceSale.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</Text>
+                        {bookItem.sale === 0 ? null : (
                             <View style={{flexDirection:'row'}}>
                                <Text style={styles.price}>{bookItem.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</Text>
                                 <Text style={styles.sale}>-{bookItem.sale}%</Text>
                             </View>
                             )}
-                        </View>
-                        <Text style={styles.bookName}>{bookItem.image}</Text>
-                        <Text style={styles.author}>{bookItem.author}</Text>
-                        <View style={styles.start}>
-                            <Text> <Icon name="star" size={15} color="#FFCE3D" /></Text>
-                            <Text> <Icon name="star" size={15} color="#FFCE3D" /></Text>
-                            <Text> <Icon name="star" size={15} color="#FFCE3D" /></Text>
-                            <Text> <Icon name="star" size={15} color="#FFCE3D" /></Text>
-                            <Text> <Icon name="star" size={15} color="#FFCE3D" /></Text>
-                            <Text style={styles.number}>5</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.detail}>Chi tiết</Text>
-                            <Text>Nhà xuất bản: {bookItem.publicsher}</Text>
-                            <Text>Năm xuất bản: {bookItem.publicationYear}</Text>
-                            <Text>Thể loại: {bookItem.category.categoryName}</Text>
-                            <Text style={styles.detail} >Mô tả</Text>
-                            <Text>{bookItem.description}</Text>
-                        </View>
-                        <View style={styles.divanh}>
-                            <Image style={styles.imgBook} source={{uri: 'http://192.168.0.103:8080/uploads/'+bookItem.image}}/>
-                        </View>
+
                     </View>
+                    <Text style={styles.bookName}>{bookItem.bookName}</Text>
+                    <Text style={styles.author}>{bookItem.author}</Text>
+                    <View style={styles.start}>
+                   
+                        <Text> <AntDesign name="star" size={15} color="#FFCE3D" /></Text>
+                        <Text> <AntDesign name="star" size={15} color="#FFCE3D" /></Text>
+                        <Text> <AntDesign name="star" size={15} color="#FFCE3D" /></Text>
+                        <Text> <AntDesign name="star" size={15} color="#FFCE3D" /></Text>
+                        <Text> <AntDesign name="star" size={15} color="#FFCE3D" /></Text>
+                        <Text style={styles.number}>5</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.detail}>Chi tiết</Text>
+                        <Text>Nhà xuất bản: {bookItem.publicsher}</Text>
+                        <Text>Năm xuất bản: {bookItem.publicationYear}</Text>
+                        <Text>Thể loại: {bookItem.category.categoryName}</Text>
+                        <Text style={styles.detail} >Mô tả</Text>
+                        <Text>{bookItem.description}</Text>
+                    </View>
+
                 </View>
+
             </ScrollView>
-            
             <View style={styles.shopping}>
-            <Button style={styles.btn} icon="cart-outline" mode="contained" buttonColor="#00ABE0" onPress={() => navigation.navigate('Order')}>
-                Thêm vào giỏ hàng
-            </Button>
-            <Button style={styles.btn} icon="shopping" mode="contained" buttonColor="#00ABE0" onPress={() => navigation.navigate('Home')}>
-                Mua ngay
-            </Button>
+                <TouchableOpacity style={styles.btn}>
+                    <Entypo name="shopping-cart" size={24} color="white" />
+                   
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btnShopping}>
+                    <Entypo name="shopping-bag" size={24} color="white" />
+                    <Text style={{color:'white',fontSize:20}}>   Mua ngay</Text>
+                </TouchableOpacity>
+               
             </View>
-            
         </View>
     )
 }
@@ -91,104 +81,104 @@ const BookDetail = ({route,navigation}) => {
 export default BookDetail
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: 'white',
-        flex: 1
-    },
-    header:{
-        flexDirection:'row',
-        justifyContent:'space-between',
-        alignItems:'center'
-    },
     anh: {
-        margin:0,
-        padding:0,
-        alignItems: 'center',
-        backgroundColor:'#FAFAFA',
-        paddingVertical:5
+        width: 'auto',
+        height: 420,
+        backgroundColor: 'blue'
     },
 
-    anhbook: {
-        height:350,
-        width:'80%'
+    back: {
+        backgroundColor: 'rgba(255,255,255,0.5)',
+        padding: 13,
+        borderRadius: 50,
+        margin: 20,
+        marginTop:40,
+        position: 'absolute',
+
     },
-    noidung:{
-        paddingHorizontal:15
+    cart: {
+        backgroundColor: 'rgba(255,255,255,0.5)',
+        padding: 13,
+        borderRadius: 50,
+        margin: 20,
+        right: 0,
+        position: 'absolute',
+        marginTop:40,
     },
-    pricebook:{
-        paddingVertical:20,
-        flexDirection:'row'
+    tiltle: {
+        backgroundColor: 'white',
     },
-    priceSale:{
-        fontSize:23,
-        fontWeight:'bold',
-        paddingRight:15
+    noidung: {
+        paddingHorizontal: 15,
+       
     },
-    price:{
-        fontSize:18,
+    space:{
+        backgroundColor: 'white',
+        borderTopLeftRadius: 50,
+        borderTopRightRadius: 50,
+        marginTop: -45,
+        height:50
+    },
+    pricebook: {
+        paddingBottom:15,
+        flexDirection: 'row'
+    },
+    priceSale: {
+        fontSize: 23,
+        fontWeight: 'bold',
+        paddingRight: 15,
+        color: "#00ABE0"
+    },
+    price: {
+        fontSize: 18,
         textDecorationLine: 'line-through',
-        paddingRight:15,
-        
-    },
-    sale:{
-        color:'red'
-    },
-    bookName:{
-        fontSize:25,
-        fontWeight:'bold',
+        paddingRight: 15,
 
     },
-    author:{
-        fontSize:16,
-        color:'green'
+    sale: {
+        color: 'red'
     },
-    start:{
-       flexDirection:'row' ,
-       paddingVertical:10
+    bookName: {
+        fontSize: 25,
+        fontWeight: 'bold',
+
     },
-    number:{
-        fontWeight:'bold',
-        marginLeft:10
+    author: {
+        fontSize: 16,
+        color: 'green'
     },
-    detail:{
-        fontSize:17,
-        fontWeight:'bold'
+    start: {
+        flexDirection: 'row',
+        paddingVertical: 10
     },
-    shopping:{
-        flexDirection:'row',
-        justifyContent:'space-around',
-        padding:20
+    number: {
+        fontWeight: 'bold',
+        marginLeft: 10
     },
-    btn:{
-        height:50,
-        alignItems:'center',
-        justifyContent: 'center'
+    detail: {
+        fontSize: 17,
+        fontWeight: 'bold'
     },
-    bag:{
-        height:60,
-        width:60,
+    shopping: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        padding: 15
+    },
+    btn: {
+        padding:10,
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor:'#00ABE0',
-        position:'absolute',
-        top:10,
-        right:10,
-        borderRadius:50,
-        justifyContent:'center',
-        alignItems:'center'
+        width:80,
+        borderRadius:20
     },
-    iconbag:{
-        fontSize:30,
-        color:'white'
-    },
-    quantity:{
-        width:30,
-        height:30,
+    btnShopping:{
+        flexDirection:'row',
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor:'red',
-        borderRadius:15,
-        position:'absolute',
-        top:10,
-        right:10,
-        justifyContent:'center',
-        alignItems:'center',
-    },
-
+        padding:10,
+        width:280,
+        borderRadius:20
+    }
 })

@@ -83,6 +83,7 @@ export default BottomTab
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+       
       },
       bottomView: {
         borderWidth: 1,
@@ -98,6 +99,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-evenly',
+        
       },
       icons: {
         width: 40,

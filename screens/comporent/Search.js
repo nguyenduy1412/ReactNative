@@ -1,30 +1,28 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
-import { Searchbar } from 'react-native-paper';
+import { Searchbar, TextInput } from 'react-native-paper';
 import { Image } from 'react-native';
 import { StatusBar } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
+import { DrawerActions} from '@react-navigation/drawer'
 const Search = () => {
     const [searchQuery, setSearchQuery] = React.useState('');
     const onChangeSearch = query => setSearchQuery(query);
     const navigation = useNavigation();
     const handleImagePress = () => {
         // Đặt selectedTab thành 'Account' khi hình ảnh được nhấn
-        navigation.navigate('Home',{ selected: 'Account'})
+        navigation.navigate('Cart')
         
       };
   return (
     <View style={styles.container}>
-        <StatusBar backgroundColor={"#fff"} barStyle={"dark-content"}></StatusBar>
-        <Searchbar
-            style={styles.search}
-            placeholder="Search"
-            onChangeText={onChangeSearch}
-            value={searchQuery}
-        />
-        <TouchableOpacity style={styles.imguser} onPress={handleImagePress} > 
-            <Image style={styles.anh} source={require('../../assets/banner1.jpg')}></Image>
+        
+        <TouchableOpacity onPress={()=>{  }}>
+            <Image style={styles.anh} source={require('../../assets/menu.png')}></Image>
+        </TouchableOpacity>
+        <TouchableOpacity  onPress={handleImagePress} > 
+            <Image style={styles.anh} source={require('../../assets/cart.png')}></Image>
         </TouchableOpacity>
     </View>
   )
@@ -45,8 +43,8 @@ const styles = StyleSheet.create({
     },
     container:{
         backgroundColor:'white',
-       
-        paddingHorizontal:20,
+        marginTop:30,
+        paddingHorizontal:5,
         paddingVertical:10,
         flexDirection:'row',
         justifyContent:'space-between',
@@ -58,8 +56,8 @@ const styles = StyleSheet.create({
         height:40,
     },
     anh:{
-        width:'100%',
-        height:'100%',
-        borderRadius:50,
+        width:40,
+        height:40,
+       
     }
 })

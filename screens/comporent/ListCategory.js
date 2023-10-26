@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { ScrollView } from 'react-native';
 import { useState } from 'react';
@@ -24,15 +24,17 @@ const ListCategory = ({ip}) => {
   return (
     <View style={styles.category} >
       <Text style={styles.title}>Danh mục</Text>
-      <ScrollView horizontal >
-      {categoryList.map((item) => (
-                <View key={item.id} style={styles.itemCate}>
-                <View style={styles.item}>
-                    <Image style={styles.imgItem} source={{uri: 'http://'+ip+':8080/uploads/'+item.img}} />
-                </View>
-                <Text style={styles.cateName}>{item.categoryName}</Text>
-                </View>
-            ))} 
+      <ScrollView horizontal contentContainerStyle={{paddingHorizontal:15}}
+      showsHorizontalScrollIndicator={false}  >
+      {categoryList.map((item,index) => {
+        return(
+          <TouchableOpacity key={index} style={{marginRight:20}}>
+              <Image style={styles.imgItem} source={{uri: 'http://'+ip+':8080/uploads/'+item.img}} />
+              <Text style={styles.cateName}>{item.categoryName}</Text>
+          </TouchableOpacity>
+        )
+      })  
+      }        
       </ScrollView>
     </View>
   )
@@ -45,14 +47,15 @@ const styles = StyleSheet.create({
     color: 'red',
     fontWeight: 'bold',
     marginBottom: 10,
-    fontSize: 20
+    fontSize: 20,
+    paddingHorizontal: 15,
   },
   category: {
     backgroundColor: 'white',
     // flexDirection:'row',
     // justifyContent: 'space-between',
     paddingVertical: 20,
-    paddingHorizontal: 15,
+   
 
   },
   itemCate: {
@@ -62,7 +65,8 @@ const styles = StyleSheet.create({
   },
   cateName: {
     width: '100%',
-    textAlign: 'center'
+    textAlign: 'center',
+    paddingTop:10
   },
   item: {
     width: 80,
@@ -75,6 +79,7 @@ const styles = StyleSheet.create({
   },
   imgItem: {
     width: 80,
-    height: 80
+    height: 80,
+    borderRadius:20
   },
 })

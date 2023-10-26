@@ -4,7 +4,7 @@ import { Dimensions } from 'react-native'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import axios from "axios";
-import Icon from 'react-native-vector-icons/AntDesign';
+import { AntDesign } from '@expo/vector-icons';
 import BookDetail from './BookDetail'
 import { Drawer } from 'react-native-paper'
 import { CommonActions } from '@react-navigation/native';
@@ -51,7 +51,7 @@ const ListBook = ({ip}) => {
                    <Text style={styles.bookName}>{item.bookName.length > 15 ? item.bookName.substring(0, 15) + "...": item.bookName}</Text>
                     <Text style={styles.author}>{item.author}</Text>
                     <View style={styles.divprice}>
-                      <Text> <Icon name="star" size={15} color="blue" /> 4.0</Text>
+                      <Text> <AntDesign name="star" size={15} color="blue" /> 4.0</Text>
                       <Text style={styles.priceSale}>{item.priceSale.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</Text>
                     </View>
                </View> 
