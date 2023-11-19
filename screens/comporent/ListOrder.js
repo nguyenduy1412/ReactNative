@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { Feather } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,115 +17,213 @@ import { StatusBar } from "react-native";
 import { Dimensions } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import { COLORS } from "../../contants";
+import { useRef } from "react";
+import Wating from "./Wating";
 const { width, height } = Dimensions.get('screen')
-const ListOrder = () => {
+const ListOrder = ({ route }) => {
+  const { id, ip, status,reset } = route.params;
+  // const id = "1"
+  // const ip = "192.168.230.95"
+  // const status = 0
   const [isVisible, setIsVisible] = useState({});
+  const [orders, setOrders] = useState([]);
+  const [orderStatus, setOrderStatus] = useState(status);
+  const [load, setLoad] = useState(true)
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
+  const currentDate = new Date();
+  const time = currentDate.getMinutes() + "-" + currentDate.getSeconds()
+  console.log(status)
+  useEffect(() => {
+    setOrderStatus(status)
+  },[reset]);
+  useEffect(() => {
+    console.log(`http:${ip}:8080/api/order/status?userId=${id}&&status=${orderStatus}&&page=${page}`)
+    axios.get(`http:${ip}:8080/api/order/status?userId=${id}&&status=${orderStatus}&&page=${page}`)
+      .then((response) => {
+        setTotalPage(response.data.totalPages)
+        setOrders(response.data.content);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      }).finally(() => {
+
+        setLoad(false)
+      });
+  }, [page, orderStatus,time]);
+  const numbers = Array.from({ length: totalPage }, (_, index) => index + 1);
   const navigation = useNavigation();
   const toggleView = (orderId) => {
     const updatedVisible = { ...isVisible };
     updatedVisible[orderId] = !updatedVisible[orderId];
     setIsVisible(updatedVisible);
-    console.log(isVisible)
+
   };
-  const [orderStatus, setOrderStatus] = useState("Tất cả");
+  const next = () => {
+
+    if (page < totalPage) {
+      setLoad(true)
+      setPage(page + 1)
+    }
+  }
+  const prev = () => {
+    console.log(page)
+    if (page > 1) {
+      setLoad(true)
+      setPage(page - 1)
+    }
+  }
+  const activePage = (item) => {
+    if (page !== item) {
+      setLoad(true)
+      setPage(item)
+    }
+
+  }
   const tabs = [
-    { id: 1, title: "Tất cả",img: require('../../assets/bill.png') },
-    { id: 2, title: "Chờ xác nhận",img: require('../../assets/waiting.png')},
-    { id: 3, title: "Chờ lấy hàng",img: require('../../assets/booking.png') },
-    { id: 4, title: "Đang giao",img: require('../../assets/tracking.png') },
-    { id: 5, title: "Đánh giá",img: require('../../assets/rating.png') },
+    { id: 4, title: "Tất cả", img: require('../../assets/bill.png') },
+    { id: 0, title: "Chờ xác nhận", img: require('../../assets/waiting.png') },
+    { id: 1, title: "Chờ lấy hàng", img: require('../../assets/booking.png') },
+    { id: 2, title: "Đang giao", img: require('../../assets/tracking.png') },
+    { id: 3, title: "Đã giao", img: require('../../assets/recieved.png') },
   ];
-  const orderData = {
-    orderNumber: "DH12345",
-    customerName: "Nguyễn Văn A",
-    totalAmount: 150.0,
-  };
-  const products = [
-    { id: 1, name: "Sản phẩm 1", quantity: 2, price: 20, image: require('../../assets/nguyennhatanh1.jpg') },
-    { id: 2, name: "Sản phẩm 2", quantity: 3, price: 15, image: require('../../assets/nguyennhatanh1.jpg') },
-    { id: 3, name: "Sản phẩm 3", quantity: 1, price: 30, image: require('../../assets/nguyennhatanh1.jpg') },
-    { id: 4, name: "Sản phẩm 3", quantity: 1, price: 30, image: require('../../assets/nguyennhatanh1.jpg') },
-  ];
-  const order=[
-    {id:1,name:"Order"},
-    {id:2,name:"Order"},
-    {id:3,name:"Order"},
-    {id:4,name:"Order"},
-  ]
+
+
   return (
     <View style={styles.container}>
-    
       <View style={styles.header}>
         <TouchableOpacity
-          onPress={()=>{navigation.goBack()}}
+          onPress={() => {
+            navigation.navigate("Home", { id: id, ip: ip })
+          }}
           style={styles.backButton}
         >
           <FontAwesome name="arrow-left" size={18} color="white" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Theo dõi đơn hàng</Text>
       </View>
-      <ScrollView style={{ padding: 16, marginBottom: 30 }}>
+      <ScrollView style={{ padding: 15, marginBottom: 30 }}>
         <View style={styles.tabs}>
           {tabs.map((item, index) => {
 
             return (
               <TouchableOpacity
-                style={[styles.tab, orderStatus === item.title && styles.activeTab]}
-                onPress={() => setOrderStatus(item.title)} key={index}
+                style={[styles.tab, orderStatus === item.id && styles.activeTab]}
+                onPress={() => {
+                  setPage(1)
+                  setLoad(true)
+                  setOrderStatus(item.id)
+                }} key={index}
               >
                 <View style={{ alignItems: 'center' }}>
                   <Image source={item.img} style={styles.icon}></Image>
-                  <Text style={[styles.tabText, orderStatus === item.title && { color: 'white' }]}>{item.title}</Text>
+                  <Text style={[styles.tabText, orderStatus === item.id && { color: 'white' }]}>{item.title}</Text>
                 </View>
               </TouchableOpacity>
             )
           })
           }
-
-
         </View>
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin đơn hàng</Text>
-          {order.map((order, index) => (
-          <View style={styles.sectionContent} key={order.id}>
-            <View style={styles.infoItem}>
-              <FontAwesome name="shopping-cart" size={24} color="teal" />
-              <Text style={styles.infoText}>Số đơn hàng: {orderData.orderNumber}</Text>
-            </View>
-            <View style={styles.infoItem}>
-              <Ionicons name="person" size={24} color="teal" />
-              <Text style={styles.infoText}>Khách hàng: {orderData.customerName}</Text>
-            </View>
-            <View style={styles.infoItem}>
-              <FontAwesome5 name="money-check" size={20} color="teal" />
-              <Text style={styles.infoText}>Tổng tiền: ${orderData.totalAmount.toFixed(2)}</Text>
-            </View>
-            <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}} key={order.id} onPress={() => toggleView(order.id)}>
-              <Text style={styles.sectionTitle}>Xem thêm</Text>
-              <MaterialIcons name="expand-more" size={24} color="teal" />
-            </TouchableOpacity>
-            {isVisible[order.id] && (
-               <View >
-               {products.map((product) => (
-                 <View key={product.id} style={styles.productItem}>
-                   <Image source={product.image} style={styles.productImage} />
-                   <View style={{marginLeft:20}}>
-                     <Text style={styles.productName}>{product.name}</Text>
-                     <Text style={styles.productQuantity}>Số lượng: {product.quantity}</Text>
-                     <Text style={styles.productPrice}>Giá: ${product.price.toFixed(2)}</Text>
-                   </View>
-                   
-                 </View>
-               ))}
-               </View>
-            )}
-            
-          </View>
-          ))}
-        </View>
+        {
+          load ? (
+            <Wating></Wating>
+          ) : (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Thông tin đơn hàng</Text>
+              <FlatList
+                scrollEnabled={false}
+                data={orders}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <TouchableOpacity style={styles.sectionContent} onPress={() => {
+                    navigation.navigate("DetailOrder", { ip: ip, order: item, id: id })
+                  }} >
+                    <View style={styles.infoItem}>
+                      <FontAwesome name="shopping-cart" size={24} color="#00ABE0" />
+                      <Text style={styles.infoText}>Mã đơn hàng: {item.id}</Text>
+                    </View>
+                    <View style={styles.infoItem}>
+                      <Ionicons name="person" size={24} color="#00ABE0" />
+                      <Text style={styles.infoText}>Khách hàng: {item.fullName}</Text>
+                    </View>
+                    <View style={styles.infoItem}>
+                      <FontAwesome5 name="money-check" size={20} color="#00ABE0" />
+                      <Text style={styles.infoText}>Tổng tiền: {item.sumMoney.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</Text>
+                    </View>
+                    <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => toggleView(item.id)}>
+                      {
+                        isVisible[item.id] ? (
+                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text style={styles.sectionTitle}>Thu gọn</Text>
+                            <MaterialIcons name="expand-less" size={24} color="#00ABE0" />
+                          </View>
+                        ) : (
+                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text style={styles.sectionTitle}>Xem thêm</Text>
+                            <MaterialIcons name="expand-more" size={24} color="#00ABE0" />
+                          </View>
+                        )
+                      }
 
-       
+                    </TouchableOpacity>
+                    {isVisible[item.id] && (
+                      <View >
+                        {item.orderDetails.map((detail) => (
+                          <TouchableOpacity key={detail.id} style={styles.productItem} >
+                            <View style={styles.borderImage}>
+                              <Image source={{ uri: 'http:' + ip + ':8080/uploads/' + detail.book.image }} style={styles.productImage} />
+                            </View>
+                            <View style={{ width: '70%', paddingLeft: 20 }}>
+                              <Text style={styles.productName}>{detail.book.bookName}</Text>
+                              <Text style={styles.productQuantity}>Số lượng: {detail.quantity}</Text>
+                              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Text style={styles.productPrice}>Giá: {detail.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</Text>
+                                {item.status == 3 && detail.statusRate == 0 && (
+                                  <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                    <TouchableOpacity style={styles.btnRate} onPress={() => {
+                                      navigation.navigate("Rating", { userId: id, ip: ip, detail: detail })
+                                    }}>
+                                      <Text style={{ color: 'black' }}>Đánh giá</Text>
+                                    </TouchableOpacity>
+                                  </View>
+                                )
+                                }
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    )}
+                  </TouchableOpacity>
 
+                )}
+              />
+              {
+                totalPage > 1 ? (
+                  <View style={{ marginBottom: 50, alignItems: 'center', flexDirection: 'row', justifyContent: 'center' }}>
+                    <TouchableOpacity style={styles.btnPage} onPress={prev}>
+                      <Image style={styles.icon} source={require('../../assets/prev.png')} />
+                    </TouchableOpacity>
+                    {numbers.map((number) => (
+                      <TouchableOpacity
+                        key={number}
+                        style={[styles.btnPage, page === number && { backgroundColor: COLORS.blue }]}
+                        onPress={() => activePage(number)}
+                      >
+                        <Text style={[styles.pageNumber, page === number && { color: 'white' }]}>{number}</Text>
+                      </TouchableOpacity>
+                    ))}
+                    <TouchableOpacity style={styles.btnPage} onPress={next}>
+                      <Image style={styles.icon} source={require('../../assets/next.png')} />
+                    </TouchableOpacity>
+                  </View>
+                ) : null
+              }
+            </View>
+          )
+        }
       </ScrollView>
     </View>
   );
@@ -136,7 +235,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   header: {
-    backgroundColor: "teal",
+    backgroundColor: COLORS.blue,
     padding: 8,
     flexDirection: "row",
     alignItems: "center",
@@ -172,7 +271,7 @@ const styles = StyleSheet.create({
     paddingTop: 10
   },
   activeTab: {
-    backgroundColor: "#339966",
+    backgroundColor: "#5ECAEE",
 
   },
   section: {
@@ -180,22 +279,23 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     elevation: 2,
     borderRadius: 5,
+    marginBottom: 30
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "teal",
+    color: COLORS.blue,
     margin: 10,
-    
+
   },
   sectionContent: {
-    backgroundColor: "#f2f2f2",
+    backgroundColor: 'white',
     padding: 10,
     borderWidth: 1,
-    borderColor: "teal",
+    borderColor: COLORS.blue,
     borderRadius: 5,
     elevation: 2,
-    marginBottom:20
+    marginBottom: 20
   },
   infoItem: {
     flexDirection: "row",
@@ -207,37 +307,56 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   productItem: {
-    backgroundColor: "#f2f2f2",
+    backgroundColor: 'white',
+
     padding: 10,
     marginVertical: 8,
     borderWidth: 1,
-    borderColor: "teal",
+    borderColor: COLORS.blue,
     borderRadius: 5,
     elevation: 2,
-    flexDirection:'row',
-    alignItems:'center',
-   
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%'
+  },
+  borderImage: {
+    width: 100,
+    height: 140,
+    borderRadius: 5,
+    overflow: 'hidden'
   },
   productImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 5,
-   
+    width: '100%',
+    height: '100%'
   },
   productName: {
     fontSize: 16,
     fontWeight: "bold",
-    paddingVertical:5
+    paddingVertical: 5,
+
   },
   productQuantity: {
     fontSize: 14,
-    paddingVertical:5
+    paddingVertical: 5
   },
   productPrice: {
     fontSize: 16,
     fontWeight: "bold",
-    paddingVertical:5
+    paddingVertical: 5
   },
+  btnRate: {
+    backgroundColor: 'gold',
+    borderRadius: 10,
+    padding: 10
+  },
+  pageNumber: {
+    fontSize: 20
+  },
+  btnPage: {
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 8
+  }
 });
 
 export default ListOrder;

@@ -4,17 +4,23 @@ import { Button } from 'react-native'
 import { StackActions } from '@react-navigation/native'
   
 import { useNavigation } from "@react-navigation/native";
+import { useEffect } from 'react';
 
 const Logout = ({ navigation }) => {
-   
+  const currentDate = new Date(); 
+  const time=currentDate.getMinutes() +"-"+currentDate.getSeconds()
+  useEffect(() => {
+    navigation.dispatch(StackActions.popToTop());
+    navigation.navigate('Login')
+  },[time])
     const handleLogout = () => {
         // const navigation = useNavigation();
         navigation.dispatch(StackActions.popToTop());
         navigation.navigate('Login')
     }
   return (
-    <View style={{marginTop:50}}>
-       <Button title='Onclick' onPress={handleLogout} ></Button>
+    <View style={{marginTop:50,backgroundColor:'white'}}>
+      
     </View>
   )
 }

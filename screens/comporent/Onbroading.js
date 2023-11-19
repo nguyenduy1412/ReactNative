@@ -40,8 +40,8 @@ const Onbroading = () => {
                             <Lottie source={require('../../assets/animations/boost.json')} autoPlay loop />
                         </View>
                     ),
-                    title: 'Boost Productivity',
-                    subtitle: 'Subscribe this channel to boost your productivity level',
+                    title: '',
+                    subtitle: '',
                 },
                 {
                     backgroundColor: '#fef3c7',
@@ -50,19 +50,19 @@ const Onbroading = () => {
                             <Lottie source={require('../../assets/animations/work.json')} autoPlay loop />
                         </View>
                     ),
-                    title: 'Work Seamlessly',
-                    subtitle: 'Get your work done seamlessly without interruption',
+                    title: '',
+                    subtitle: '',
                 },
                 {
-                    backgroundColor: '#a78bfa',
+                    backgroundColor: '#76CDF5',
                     image: (
                         <View style={styles.lottie}>
                             
                             <Lottie source={require('../../assets/animations/achieve.json')} autoPlay loop />
                         </View>
                     ),
-                    title: 'Achieve Higher Goals',
-                    subtitle: 'By boosting your productivity we help you to achieve higher goals',
+                    title: '',
+                    subtitle: '',
                 },
             ]}
         />

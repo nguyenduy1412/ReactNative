@@ -6,15 +6,33 @@ import { Entypo } from '@expo/vector-icons';
 import { TextInput } from 'react-native';
 import axios from "axios";
 import { Alert } from 'react-native';
+import CustomAlert from './CustomAlert';
+import { Dimensions } from 'react-native'
+import { COLORS } from '../../contants';
+const {width,height} =Dimensions.get('screen')
 const Login = () => {
-  const ip="192.168.0.100";
+  const ip="192.168.23.95";
   const navigation = useNavigation();
+  const [id,setId]=useState(0);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(true)
+  const [img,setImg]=useState();
+  const [color,setColor]=useState("");
+  
+  const [message,setMessage]=useState("");
+  const [alertVisible, setAlertVisible] = useState(false);
+  
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+  const onSuccess = () =>{
+    navigation.navigate("DrawerApp",{ id: id,ip:ip});
+    setAlertVisible(false);
+  }
+  const onError =()=>{
+    setAlertVisible(false);
+  }
   //const navigation = useNavigation();
   const handleLogin = async () => {
     console.log('Alo')
@@ -25,11 +43,19 @@ const Login = () => {
       console.log('Alo',response.data);
       if (response.data) {
         // Đăng nhập thành công
-        Alert.alert("Thông báo", "Đăng nhập thành công!");
-        navigation.navigate("DrawerApp");
+        setId(response.data.id);
+        setColor("#1877f2")
+        setImg(require('../../assets/oggy.gif'))
+        setMessage("Đăng nhập thành công")
+        setAlertVisible(true);
+        
       } else {
         // Đăng nhập thất bại
-        Alert.alert("Thông báo", "Đăng nhập thất bại");
+        setMessage("Sai tài khoản hoặc mật khẩu")
+        setImg(require('../../assets/loginFail.webp'))
+        setColor("red")
+        setAlertVisible(true);
+        
       }
     } catch (error) {
       console.error("Error logging in:", error);
@@ -37,16 +63,14 @@ const Login = () => {
   };
   return (
     <View style={styles.container}>
-      <SafeAreaView style={{marginBottom:20}} >
-          <View style={styles.back} >
+      <View>
+        <Image style={styles.img} source={require('../../assets/loginForm.png')} />
+        <View style={styles.back} >
               <TouchableOpacity onPress={()=> navigation.goBack()} style={styles.btnBack} >
-                  <AntDesign name="arrowleft" size={30} color="black" />
+                  <AntDesign name="arrowleft" size={30} color="white" />
               </TouchableOpacity>
           </View>
-          <View style={{flexDirection:'row',justifyContent:'center'}}>
-              <Image source={require('../../assets/login.png')} style={{width:200,height:200}} ></Image>
-          </View>
-      </SafeAreaView>
+      </View>
       <View style={styles.content}>
         <View style={styles.form} >
           <Text style={styles.lable}>Tên đăng nhập</Text>
@@ -73,7 +97,9 @@ const Login = () => {
               </TouchableOpacity>
           </View>
           
-            <TouchableOpacity style={{justifyContent:'flex-end',flexDirection:'row',marginBottom:10}}>
+            <TouchableOpacity style={{justifyContent:'flex-end',flexDirection:'row',marginBottom:10}} onPress={()=>{
+              navigation.navigate("ForgotPass",{ ip:ip})
+            }}>
               <Text>Quên mật khẩu?</Text>
             </TouchableOpacity >
             <TouchableOpacity style={styles.btnLogin} onPress={handleLogin} >
@@ -100,6 +126,13 @@ const Login = () => {
               <Text style={{fontWeight:'bold' ,color:'#FFD700'}}> Đăng ký</Text>
             </TouchableOpacity>
          </View>
+         <CustomAlert 
+            visible={alertVisible}
+            message={message}
+            onPage={id !==0 ? onSuccess : onError}
+            img={img}
+            color={color}
+        />
       </View>
     </View>
     
@@ -110,21 +143,27 @@ export default Login
 
 const styles = StyleSheet.create({
   container:{
-   
-    paddingTop:30,
-    backgroundColor:'#877dfa',
+    backgroundColor:'red',
     flex:1,
   },
   back:{
     flexDirection:'row',
     justifyContent:'flex-start',
-    paddingLeft:20
+    paddingLeft:20,
+    paddingTop:10,
+    position:'absolute',
+    top:30
   },
   btnBack:{
-    backgroundColor:'#FFD700',
+    backgroundColor:COLORS.sky,
     padding:5,
     borderTopRightRadius:16,
     borderBottomLeftRadius:16
+  },
+
+  img:{
+    width:width,
+    height:350
   },
   content:{
     flex:1,
@@ -132,7 +171,8 @@ const styles = StyleSheet.create({
     paddingTop:40,
     padding:45,
     borderTopLeftRadius:50,
-    borderTopRightRadius:50
+    borderTopRightRadius:50,
+    marginTop:-45
   },
   form:{
 
@@ -151,13 +191,14 @@ const styles = StyleSheet.create({
   },
   btnLogin:{
     borderRadius:20,
-    backgroundColor:'#FFD700',
-    padding:20
+    backgroundColor:COLORS.sky,
+    padding:18
   },
   txtLogin:{
     textAlign:'center',
     fontWeight:'bold',
-    fontSize:15
+    fontSize:18,
+    color:'white'
   },
   lienket:{
     width:40,

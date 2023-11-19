@@ -48,18 +48,24 @@ export default ListBanner
 
 const styles = StyleSheet.create({
     banner:{
-        height:200
+        height:200,
+       
     },
     
     slide: {
-        width:width,
+        width: width,
         justifyContent: 'center',
         alignItems: 'center',
-        height:200
+        height:200,
+        borderRadius:20,
+        overflow:'hidden',
+        paddingHorizontal:15,
+       
     },
     image: {
-        width: width, // Thay đổi kích thước hình ảnh theo ý muốn
+        width: '100%', // Thay đổi kích thước hình ảnh theo ý muốn
         height: 200,
+        borderRadius:20,
     },
 
 })
