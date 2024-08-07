@@ -50,7 +50,7 @@ const ListCart = ({ route }) => {
   }, [time, reset]);
 
   const handleRemoveItem = (itemId) => {
-    showToast("Xóa thành công", "success")
+   
     axios.delete(`http://${ip}:8080/api/cartItem/${itemId}`)
       .then((response) => {
         showToast("Xóa thành công", "success")

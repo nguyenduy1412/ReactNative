@@ -11,7 +11,7 @@ import { Dimensions } from 'react-native'
 import { COLORS } from '../../contants';
 const {width,height} =Dimensions.get('screen')
 const Login = () => {
-  const ip="192.168.23.95";
+  const ip="192.168.35.95";
   const navigation = useNavigation();
   const [id,setId]=useState(0);
   const [username, setUsername] = useState("");
@@ -106,20 +106,7 @@ const Login = () => {
                 <Text style={styles.txtLogin}>Đăng nhập</Text>
             </TouchableOpacity>
         </View>
-         <Text style={{padding:10,fontSize:20,fontWeight:'bold',textAlign:'center'}}>
-            Or
-         </Text>
-         <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-            <TouchableOpacity style={{padding:16, backgroundColor:'#EEEEEE',borderRadius:30}}>
-              <Image style={styles.lienket} source={require('../../assets/google.png')}></Image>
-            </TouchableOpacity>
-            <TouchableOpacity style={{padding:16, backgroundColor:'#EEEEEE',borderRadius:30}}>
-              <Image style={styles.lienket} source={require('../../assets/apple.png')}></Image>
-            </TouchableOpacity>
-            <TouchableOpacity style={{padding:16, backgroundColor:'#EEEEEE',borderRadius:30}}>
-              <Image style={styles.lienket} source={require('../../assets/facebook.png')}></Image>
-            </TouchableOpacity>
-         </View>
+         
          <View style={{justifyContent:'center',flexDirection:'row',marginTop:20}}>
             <Text>Bạn chưa có tài khoản?</Text>
             <TouchableOpacity onPress={()=>navigation.navigate('SignUp')}>
@@ -143,7 +130,7 @@ export default Login
 
 const styles = StyleSheet.create({
   container:{
-    backgroundColor:'red',
+    backgroundColor:'white',
     flex:1,
   },
   back:{

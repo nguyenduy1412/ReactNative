@@ -202,7 +202,7 @@ const App = () => {
    
         <Stack.Screen name="PassNew" component={PassNew} />
         <Stack.Screen name="MaOtp" component={MaOtp} />
-        <Stack.Screen name="ForgotPass" component={ForgotPass} />
+        <Stack.Screen name="ForgotPass" component={ForgotPass} options={{ headerShown: false }} />
         <Stack.Screen name="DetailOrder" component={DetailOrder} />
         <Stack.Screen name="Wating" component={Wating} />
         <Stack.Screen name="Rating" component={Rating} />

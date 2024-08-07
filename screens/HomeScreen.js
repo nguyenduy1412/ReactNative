@@ -207,7 +207,7 @@ const HomeScreen = ({ route }) => {
                                                 <Image style={styles.imgBook} source={{ uri: 'http://' + ip + ':8080/uploads/' + item.image }} />
                                                 <View style={styles.noidung}>
                                                     <View style={styles.dess}>
-                                                        <Text style={styles.bookName}>{item.bookName.length > 17 ? item.bookName.substring(0, 17) + "..." : item.bookName}</Text>
+                                                        <Text style={styles.bookName}>{item.bookName.length > 16 ? item.bookName.substring(0, 16) + ".." : item.bookName}</Text>
                                                         <Text style={styles.author}>{item.author.nameAuthor}</Text>
                                                         <View style={styles.divprice}>
                                                             <Text style={{ color: 'white' }}> <AntDesign name="star" size={15} color="white" /> {item.star}</Text>

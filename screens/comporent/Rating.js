@@ -151,7 +151,7 @@ const Rating = ({route}) => {
                     color={starValue <= star ? 'gold' : 'gray'}
                 />
                 </TouchableOpacity>
-            ))}
+                ))}
                  <Text>{star}</Text>
                 </View>
                 <View>

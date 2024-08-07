@@ -11,7 +11,7 @@ import { Dimensions } from 'react-native'
 import { COLORS } from '../../contants';
 const {width,height} =Dimensions.get('screen')
 const SignUp = () => {
-  const ip = "192.168.23.95";
+  const ip = "192.168.35.95";
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");

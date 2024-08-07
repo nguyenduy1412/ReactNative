@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Dimensions, StatusBar, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { useState } from 'react'
@@ -8,13 +8,20 @@ import { AntDesign } from '@expo/vector-icons';
 import { Image } from 'react-native'
 import { TextInput } from 'react-native'
 import axios from 'axios'
+import { COLORS } from '../../contants'
+import CustomAlert from './CustomAlert'
+const {width,height} =Dimensions.get('screen')
 const ForgotPass = ({ route }) => {
   const { ip} = route.params;
   const [email, setEmail] = useState('')
   const [errorEmail, setErrorEmail] = useState('')
-
+  const [alertVisible, setAlertVisible] = useState(false);
   const navigation = useNavigation();
+  const onError =()=>{
+    setAlertVisible(false);
+  }
   const search = () => {
+
     let check = true;
     let regexEmail = new RegExp(/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i)
     if (!regexEmail.test(email)) {
@@ -26,10 +33,13 @@ const ForgotPass = ({ route }) => {
       setErrorEmail("");
     }
     if (check) {
+      setAlertVisible(true)
       axios.get(`http://${ip}:8080/api/email/forgotPass/${email}`)
         .then((respone) => {
           if (respone.status === 200) {
+           
             navigation.navigate("MaOtp", { email: email, ip: ip })
+            setAlertVisible(false)
           }
         }
         )
@@ -44,16 +54,15 @@ const ForgotPass = ({ route }) => {
   }
   return (
     <View style={styles.container}>
-      <SafeAreaView style={{ marginBottom: 20 }} >
+      {/* <StatusBar translucent={true} backgroundColor={'transparent'}></StatusBar> */}
+      <View>
+        <Image style={styles.img} source={require('../../assets/register.png')} />
         <View style={styles.back} >
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.btnBack} >
-            <AntDesign name="arrowleft" size={30} color="black" />
-          </TouchableOpacity>
-        </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <Image source={require('../../assets/login.png')} style={{ width: 200, height: 200 }} ></Image>
-        </View>
-      </SafeAreaView>
+              <TouchableOpacity onPress={()=> navigation.goBack()} style={styles.btnBack} >
+                  <AntDesign name="arrowleft" size={30} color="white" />
+              </TouchableOpacity>
+          </View>
+      </View>
       <View style={styles.content}>
         <View style={styles.form} >
           <Text style={styles.lable}>Email</Text>
@@ -74,6 +83,13 @@ const ForgotPass = ({ route }) => {
           </TouchableOpacity>
         </View>
       </View>
+      <CustomAlert 
+            visible={alertVisible}
+            message={"Xin chờ"}
+            onPage={onError}
+            img={require('../../assets/sonic.webp')}
+            color={COLORS.sky}
+        />
     </View>
   )
 }
@@ -82,22 +98,27 @@ export default ForgotPass
 
 const styles = StyleSheet.create({
   container: {
-
-    paddingTop: 30,
-    backgroundColor: '#877dfa',
+    backgroundColor: 'white',
     flex: 1,
   },
-  back: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    paddingLeft: 20,
-    paddingTop: 10
+  back:{
+    flexDirection:'row',
+    justifyContent:'flex-start',
+    paddingLeft:20,
+    paddingTop:10,
+    position:'absolute',
+    top:30
   },
-  btnBack: {
-    backgroundColor: '#FFD700',
-    padding: 5,
-    borderTopRightRadius: 16,
-    borderBottomLeftRadius: 16
+  btnBack:{
+    backgroundColor:COLORS.sky,
+    padding:5,
+    borderTopRightRadius:16,
+    borderBottomLeftRadius:16
+  },
+
+  img:{
+    width:width,
+    height:350
   },
   error: {
     color: 'red',
@@ -109,7 +130,8 @@ const styles = StyleSheet.create({
     paddingTop: 40,
     padding: 45,
     borderTopLeftRadius: 50,
-    borderTopRightRadius: 50
+    borderTopRightRadius: 50,
+    marginTop:-45
   },
   form: {
 
@@ -128,14 +150,15 @@ const styles = StyleSheet.create({
   },
   btnLogin: {
     borderRadius: 20,
-    backgroundColor: '#FFD700',
+    backgroundColor: COLORS.sky,
     padding: 20,
     marginTop: 15
   },
   txtLogin: {
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 15
+    fontSize: 15,
+    color:'white'
   },
   lienket: {
     width: 40,

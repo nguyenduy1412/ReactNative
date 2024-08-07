@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { AntDesign } from '@expo/vector-icons';
@@ -7,7 +7,8 @@ import { TextInput } from 'react-native';
 import axios from "axios";
 import { Alert } from 'react-native';
 import CustomAlert from './CustomAlert';
-
+import { COLORS } from '../../contants';
+const {width,height} =Dimensions.get('screen')
 const PassNew = ({route}) => {
     const {ip,email} = route.params;
     const navigation = useNavigation();
@@ -85,16 +86,14 @@ const PassNew = ({route}) => {
     };
     return (
         <View style={styles.container}>
-            <SafeAreaView style={{ marginBottom: 20 }} >
+            <View>
+                <Image style={styles.img} source={require('../../assets/register.png')} />
                 <View style={styles.back} >
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.btnBack} >
-                        <AntDesign name="arrowleft" size={30} color="black" />
+                    <TouchableOpacity onPress={()=> navigation.goBack()} style={styles.btnBack} >
+                        <AntDesign name="arrowleft" size={30} color="white" />
                     </TouchableOpacity>
                 </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                    <Image source={require('../../assets/login.png')} style={{ width: 200, height: 200 }} ></Image>
-                </View>
-            </SafeAreaView>
+            </View>
             <View style={styles.content}>
                 <View style={styles.form} >
                     <Text style={styles.lable}>Nhập mật khẩu mới</Text>
@@ -167,30 +166,36 @@ export default PassNew
 
 const styles = StyleSheet.create({
     container: {
-
-        paddingTop: 30,
-        backgroundColor: '#877dfa',
+        backgroundColor: 'white',
         flex: 1,
     },
-    back: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        paddingLeft: 20,
-        paddingTop: 10
-    },
-    btnBack: {
-        backgroundColor: '#FFD700',
-        padding: 5,
-        borderTopRightRadius: 16,
-        borderBottomLeftRadius: 16
-    },
+    back:{
+        flexDirection:'row',
+        justifyContent:'flex-start',
+        paddingLeft:20,
+        paddingTop:10,
+        position:'absolute',
+        top:30
+      },
+      btnBack:{
+        backgroundColor:COLORS.sky,
+        padding:5,
+        borderTopRightRadius:16,
+        borderBottomLeftRadius:16
+      },
+    
+      img:{
+        width:width,
+        height:350
+      },
     content: {
         flex: 1,
         backgroundColor: 'white',
         paddingTop: 40,
         padding: 45,
         borderTopLeftRadius: 50,
-        borderTopRightRadius: 50
+        borderTopRightRadius: 50,
+        marginTop:-45
     },
     form: {
 
@@ -212,7 +217,7 @@ const styles = StyleSheet.create({
     },
     btnLogin: {
         borderRadius: 20,
-        backgroundColor: '#FFD700',
+        backgroundColor: COLORS.sky,
         padding: 20
     },
     borderInput: {
@@ -222,7 +227,8 @@ const styles = StyleSheet.create({
     txtLogin: {
         textAlign: 'center',
         fontWeight: 'bold',
-        fontSize: 15
+        fontSize: 15,
+        color:'white'
     },
     lienket: {
         width: 40,

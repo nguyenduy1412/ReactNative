@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     anh: {
         width: 'auto',
         height: 420,
-        backgroundColor: 'blue'
+        backgroundColor: 'white'
     },
 
     back: {
